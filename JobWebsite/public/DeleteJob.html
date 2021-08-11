@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+
+<head>
+    <title>Delete A Job</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" href="w3.css" rel="stylesheet">
+    <script src="jquery-3.5.1.js"></script>
+    <script>
+        $(document).ready(() => {
+            
+            $.get("/employer/myJobs", (database, status) => {
+                console.log(database)
+                
+                if (database == '[]') {
+                    $("#applications").html('<h1>Sorry, It appears you have not created any job</h1>')
+                    $("#totals").html(0)
+                } else if(database=="not logged in"){
+                    alert("Sorry it appears you haven't logged in")
+                } else{
+                    var statements = ''
+                    var limit = 0
+                    for (limit = 0; limit < database.length; limit++) {
+                        statements += "<div class='w3-card w3-padding'><h4>" + database[limit].jobTitle + "\n\
+                             </h4><p>" + database[limit].companyEmploying + "<span class='w3-right'><button class='w3-button w3-green' onClick=callMe('" + database[limit]._id + "')>Delete</button></span></p><p>" + database[limit].location + " |\n\
+                            " + database[limit].jobType + " | Ksh " + database[limit].saraly + "</p><p>Industry Type: " + database[limit].industryType + "</p><p>Job Function: " + database[limit].jobFunction + ".<span class='w3-right></p>'\n\
+                            <hr><p>" + database[limit].description + "</p></div>";
+                    }
+                    $("#applications").html(statements)
+                    $("#totals").html(database.length)
+
+                }
+
+            })
+        })
+    </script>
+    <script>
+        function callMe(id) {
+            $(document).ready(()=>{
+                $.post("/employer/deleteAJob",
+                        {
+                            id: id.toString()
+                        },
+                        function (data, status) {
+                            if(data=="deleted")
+                            {
+                                window.location.href='/DeleteJobs'
+                            }   
+                });
+            })    
+            }
+    </script>
+</head>
+
+<body>
+    <header class="w3-xxlarge w3-padding w3-center w3-white w3-top w3-text-green" style="position: fixed;left: 0;right: 0;"><b>Tarmac
+            Job Interview</b>
+
+    </header>
+    <div class="w3-card-2 formContainer" style="margin: auto; width: 780px; margin-top: 80px; padding: 40px">
+        <h3>Choose an operation to perform</h3>
+        <div class="w3-cell" style="padding-left :20px;">
+            <a href="/CreateJobs" style="text-decoration: none;"><button class="w3-green w3-button">Create New
+                    Job</button></a>
+        </div>
+        <div class="w3-cell" style="padding-left: 70px;">
+            <a href="/UpdateJobs" style="text-decoration: none;"> <button class="w3-green w3-button">Update
+                    Existing Job</button></a>
+        </div>
+        <div class="w3-cell" style="padding-left: 70px;">
+            <a href="/" style="text-decoration: none;"> <button class="w3-green w3-button">Go To Homepage</button></a>
+        </div>
+    </div>
+    <div id="contents">
+        <div class="w3-container" style="width: 800px; margin: auto; margin-top: 30px;">
+            <div class="w3-container w3-green w3-padding-16 w3-large">
+                Total Jobs Found
+            </div>
+            <div class="w3-container w3-border">
+                <p class="w3-section w3-large"><b id="totals"></b> Jobs Found</p>
+            </div>
+            <div id="searched"></div>
+            <div class="w3-container w3-border w3-margin-top w3-green w3-large w3-padding-16">
+                All Your Created Jobs
+            </div>
+            <div id="applications"></div>
+        </div>
+</div>
+</body>
+
+</html>

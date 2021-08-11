@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+
+<head>
+    <title>Create A Job</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" href="w3.css" rel="stylesheet">
+    <script src="jquery-3.5.1.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myform').on('submit', function (evt) {
+                evt.preventDefault();
+                var action = $(this).attr('action');
+                var $container = $(this).closest('.formContainer');
+                $.ajax({
+                    url: action,
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        if (data == "Job Created") {
+                             window.location.href='/afterCreateJob';
+                        } else if(data=="not logged in"){
+                            $container.html('<h2>!!!Sorry you have not logged in</h2>');
+                        }
+                        else {
+                            $container.html('There was a problem.');
+                        }
+                    },
+                    error: function () {
+                        $container.html('There was a problem!!!.');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <header class="w3-xxlarge w3-padding w3-center w3-white w3-top w3-text-green" style="position: fixed;left: 0;right: 0;"><b>Tarmac
+            Job Interview</b>
+
+    </header>
+    <div class="w3-card-2 formContainer" style="margin: auto; width: 900px; margin-top: 80px; padding: 40px">
+        <h3>Create A New Job Or:</h3>
+       
+        <div class="w3-cell" style="padding-left :20px;">
+            <a href="/DeleteJobs" style="text-decoration: none;"><button class="w3-green w3-button">Delete Existing
+                    Job</button></a>
+        </div>
+        <div class="w3-cell" style="padding-left: 70px;">
+            <a href="/UpdateJobs" style="text-decoration: none;"> <button class="w3-green w3-button">Update
+                    Existing Job</button></a>
+        </div>
+        <div class="w3-cell" style="padding-left: 70px;">
+            <a href="/" style="text-decoration: none;"> <button class="w3-green w3-button">Go To Homepage</button></a>
+        </div>
+    </div>
+    <div class="w3-card-2 formContainer" style="margin: auto; width: 900px; margin-top: 30px; padding: 40px">
+
+        <form action="/employer/CreateJob" method="POST" id="myform">
+
+            <label class="w3-center"><b>Job Title</b></label>
+            <input class="w3-input" name="jobTitle" type="text" required>
+
+            <label><b>Company Employing</b></label>
+            <input class="w3-input" name="companyEmploying" type="text" required>
+
+            <select class="w3-select w3-margin-top" name="location" required>
+                <option value="" disabled selected>Located at.</option>
+                <option value="Nairobi">Nairobi</option>
+                <option value="Kisumu">Kisumu</option>
+                <option value="Mombasa">Mombasa</option>
+                <option value="Machakos">Machakos</option>
+                <option value="Nakuru">Nakuru</option>
+                <option value="Eldoret">Eldoret</option>
+            </select>
+
+            <label><b>Type</b></label>
+            <p>
+                <input class="w3-radio" type="radio" name="jobType" value="full-time" checked>
+                <label><b>Full-Time</b></label>
+            </p>
+            <p>
+                <input class="w3-radio" type="radio" name="jobType" value="part-time">
+                <label><b>Part-Time</b></label>
+            </p>
+
+
+            <label><b>Amount Paying in Ksh</b></label>
+            <input class="w3-input" name="saraly" type="number" value="Confidential">
+
+            <label><b>Job Function</b></label>
+            <select class="w3-select w3-section" name="jobFunction" required>
+                <option value="" disabled selected>Job Function</option>
+                <option value="Consulting and Strategy">Consulting & Strategy</option>
+                <option value="Sales">Sales</option>
+                <option value="Control and Assurance">Control & Assurance</option>
+                <option value="Social Services">Social Services</option>
+                <option value="Marketing and Communication">Marketing & Communication</option>
+                <option value="Management Business Development">Management Business Development</option>
+                <option value="Driver and transport Services">Driver & Transport Services</option>
+                <option value="Customer Services and Support">Customer Service & Support</option>
+                <option value="Software and Data">Software & Data</option>
+                <option value="Consulting  Strategy">Consulting & Strategy</option>
+                <option value="Engineering  Technology">Engineering & Technology</option>
+                <option value="Medical and Phamaceuticals ">Medical & Pharmaceutical</option>
+            </select>
+            <label><b>Industry Type</b></label>
+            <select class="w3-select w3-section" name="industryType" required>
+                <option value="" disabled selected>Industry Type</option>
+                <option value="Production">Production</option>
+                <option value="Assembly">Assembly</option>
+                <option value="Insurance">Insurance</option>
+                <option value="Manufacturing">Manufacturing</option>
+                <option value="Processing">Processing</option>
+                <option value="Construction">Construction</option>
+            </select>
+            <label><b>Other Description</b></label>
+            <textarea name="description" rows="10" cols="30" style="margin-top: 50px; width: 830px;"></textarea>
+            <input class="w3-button w3-margin-top w3-green" type="submit" value="Create">
+        </form>
+
+    </div>
+
+</body>
+
+</html>

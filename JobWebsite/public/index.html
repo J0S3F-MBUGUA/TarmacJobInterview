@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Tarmac Job Interview</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="w3.css" type="text/css" rel="stylesheet">
+    <style>
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: "Karma", sans-serif
+        }
+
+        .w3-bar-block .w3-bar-item {
+            padding: 20px
+        }
+
+        button {
+            position: static
+        }
+
+        #contents {
+            margin-left: 0;
+            margin-right: 0;
+            max-width: 80%;
+            padding: 10px;
+        }
+
+        #searcher {
+            margin-left: 0;
+            margin-right: 0;
+            min-width: 800px;
+            padding: 10px;
+            height : 100px;
+            overflow: visible;
+        }
+        #hintDiv{
+            overflow: visible;
+        }
+        @media screen and (max-width:1550px) {
+            #search {
+                display: none;
+            }
+
+        }
+    </style>
+    <script src="jquery-3.5.1.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.get("/jobs/displayAllJobs", function (database, status) {
+                var statements = ''
+                var limit = 0
+                for (limit = 0; limit < database.length; limit++) {
+                    statements += "<div class='w3-card w3-padding'><h4>" + database[limit].jobTitle + "\n\
+                </h4><p>" + database[limit].companyEmploying + "<span class='w3-right'><button class='w3-button w3-green' onClick=callMe('" + database[limit]._id.toString() + "')>Apply Now</button></span></p><p>" + database[limit].location + " |\n\
+                " + database[limit].jobType + " | Ksh " + database[limit].saraly + "</p><p>Industry Type: " + database[limit].industryType + "</p><p>Job Function: " + database[limit].jobFunction + ".<span class='w3-right></p>'\n\
+                <hr><p>" + database[limit].description + "</p></div>";
+                }
+                $("#applications").html(statements)
+                $("#totals").html(database.length)
+
+            });
+
+        });
+        function callMe(identification) {
+            localStorage.setItem('thisJob', identification.toString())
+            window.location.href = '/SubmitJob'
+        }
+
+    </script>
+
+    <script>
+        // Filter
+        function myFunction() {
+            var JobFunction, Industry, Location
+            JobFunction = document.getElementById('searchJobFunction').value;
+            Industry = document.getElementById('searchIndustry').value;
+            Location = document.getElementById('searchLocation').value;
+            if(document.getElementById('searchJobFunction2').value)
+            JobFunction = document.getElementById('searchJobFunction2').value;
+            if(document.getElementById('searchIndustry2').value)
+            Industry = document.getElementById('searchIndustry2').value;
+            if(document.getElementById('searchLocation2').value)
+            Location = document.getElementById('searchLocation2').value;
+            search = "jobFunction=" + JobFunction + "&industry=" + Industry + "&location=" + Location
+        
+            //Perform full search
+            $(document).ready(() => {
+                $.get("/jobs/fullSearch?" + search, (database, status) => {
+                    if (database == '[]') {
+                        $("#applications").html('<h1>No search results found</h1>')
+                        $("#totals").html(0)
+                    } else {
+                        var statements = ''
+                        var limit = 0
+                        for (limit = 0; limit < database.length; limit++) {
+                            statements += "<div class='w3-card w3-padding'><h4>" + database[limit].jobTitle + "\n\
+                             </h4><p>" + database[limit].companyEmploying + "<span class='w3-right'><button class='w3-button w3-red' onClick=callMe('" + database[limit]._id + "')>Apply Now</button></span></p><p>" + database[limit].location + " |\n\
+                            " + database[limit].jobType + " | Ksh " + database[limit].saraly + "</p><p>Industry Type: " + database[limit].industryType + "</p><p>Job Function: " + database[limit].jobFunction + "</p>'\n\
+                            <hr><p>" + database[limit].description + "</p></div>";
+                        }
+                        $("#applications").html(statements)
+                        $("#totals").html(database.length)
+                        document.getElementById('searchJobFunction').value = ""
+                        document.getElementById('searchIndustry').value = ""
+                        document.getElementById('searchLocation').value = ""
+                        document.getElementById('searchJobFunction2').value = ""
+                        document.getElementById('searchIndustry2').value = ""
+                        document.getElementById('searchLocation2').value = ""
+                    }
+                })
+            })
+        }
+    </script>
+
+    <script>
+        function showHint(str) {
+            document.getElementById('hintDiv').innerHTML=''
+            $(document).ready(() => {
+                $.get("/jobs/partialSearch?search="+str, (database, status) => {
+                    if (database == '[]') {
+                        //$("#applications").html('<h1>No search results found</h1>')
+                       // $("#totals").html(0)
+                       console.log('No results')
+                    } else {
+                        database.forEach(element => {
+                            if(element){
+                                document.getElementById('hintDiv').innerHTML=+'<div>'+element.jobTitle+'</div>'
+                            }
+                        });
+                            
+                            
+                        
+                        /*var statements = ''
+                        var limit = 0
+                        for (limit = 0; limit < database.length; limit++) {
+                            statements += "<div class='w3-card w3-padding'><h4>" + database[limit].jobTitle + "\n\
+                             </h4><p>" + database[limit].companyEmploying + "<span class='w3-right'><button class='w3-button w3-red' onClick=callMe('" + database[limit]._id + "')>Apply Now</button></span></p><p>" + database[limit].location + " |\n\
+                            " + database[limit].jobType + " | Ksh " + database[limit].saraly + "</p><p>Industry Type: " + database[limit].industryType + "</p><p>Job Function: " + database[limit].jobFunction + ".<span class='w3-right></p>'\n\
+                            <hr><p>" + database[limit].description + "</p></div>";
+                        }
+                        $("#applications").html(statements)
+                        $("#totals").html(database.length)*/
+                        console.log(database)
+                    }
+                })
+            }) 
+        }
+       
+    </script>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="w3-sidebar w3-bar-block w3-border-right w3-top w3-right" style="display:none; width:200px"
+        id="mySidebar">
+        <button onclick="w3_close()" class="w3-bar-item w3-large">Close &times;</button>
+        <a href="LoginPage.html" class="w3-bar-item w3-button">POST NEW JOB</a>
+        <a href="JoinIterview.html" class="w3-bar-item w3-button">JOIN INTERVIEW</a>
+        <a href="LoginPage.html" class="w3-bar-item w3-button">LOGIN</a>
+        <a href="SignUp.html" class="w3-bar-item w3-button">SIGN UP</a>
+        <a href="#" class="w3-bar-item w3-button">ABOUT US</a>
+        <a href="#" class="w3-bar-item w3-button">CONTACTS</a>
+    </div>
+
+    <header class="w3-margin-bottom" id="main" style="position:fixed;left: 0;right: 0; background-color: white">
+        <div class="w3-card">
+            <div class="w3-top w3-mobile">
+                <button id="openNav" class="w3-button w3-green w3-xlarge" onclick="w3_open()">☰</button>
+                <div class="w3-right w3-padding-16 w3-text-black w3-hide-small w3-margin-right"><a
+                        href="LoginPage.html">LOGIN</a> | <a href="SignUp.html">SIGN UP</a><a
+                        href="JoinIterview.html"><button class="w3-right w3-border-0 w3-margin-left w3-text-blue">JOIN
+                            INTERVIEW</button></a></div>
+
+            </div>
+            <div class="w3-center w3-padding-16 w3-jumbo">
+                <h1><b class="w3-text-green">Tarmac Job Interview</b></h1>
+            </div>
+        </div>
+    </header>
+    <div class='w3-white w3-padding-24' style="margin-left: 40px; margin-right: 40px;">
+        <!--<div>-->
+
+        <div class=' w3-xlarge w3-center' style="margin-top: 40px;">FIND A JOB</div>
+        <div>
+            <div class=" w3-green w3-cell-row" id='searcher'>
+                <div style="width:20%; padding-left: 80px;" class="w3-cell w3-padding w3-mobile">
+                    <select class="w3-select w3-section w3-border" name="searchJobFunction" id="searchJobFunction2">
+                        <option value="" disabled selected>Job Function</option>
+                        <option value="Consulting & Strategy">Consulting & Strategy</option>
+                        <option value="Sales">Sales</option>
+                        <option value="Control and Assurance">Control & Assurance</option>
+                        <option value="Social Services">Social Services</option>
+                        <option value="Marketing and Communication">Marketing & Communication</option>
+                        <option value="Management Business Development">Management Business Development</option>
+                        <option value="Driver and Transport Services">Driver & Transport Services</option>
+                        <option value="Customer Service and Support">Customer Service & Support</option>
+                        <option value="Software and Data">Software & Data</option>
+                        <option value="Engineering and Technology">Engineering & Technology</option>
+                        <option value="Medical and Pharmaceuticals">Medical & Pharmaceutical</option>
+                    </select>
+                </div>
+                <div style="width:20%" class="w3-cell w3-padding w3-mobile">
+                    <select class="w3-select w3-section w3-border" name="searchIndustry" id="searchIndustry2">
+                        <option value="" disabled selected>Industry</option>
+                        <option value="Manufacturing">Manufacturing</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Farming">Farming</option>
+                        <option value="Publishing">Publishing</option>
+                        <option value="Management">Management</option>
+                    </select>
+                </div>
+                <div style="width:20%" class="w3-cell w3-padding w3-mobile">
+                    <select class="w3-select w3-section w3-border" name="searchLocation" id="searchLocation2">
+                        <option value="" disabled selected>Location</option>
+                        <option value="Nairobi">Nairobi</option>
+                        <option value="Kisumu">Kisumu</option>
+                        <option value="Kisii">Kisii</option>
+                        <option value="Kitale">Kitale</option>
+                        <option value="Mombasa">Mombasa</option>
+                        <option value="Nakuru">Nakuru</option>
+                        <option value="Bungoma">Bungoma</option>
+                        <option value="Kiambu">Kiambu</option>
+                        <option value="Nyeri">Nyeri</option>
+                        <option value="Narok">Narok</option>
+                        <option value="Nyamira">Nyamira</option>
+                        <option value="Nandi">Nandi</option>
+                    </select>
+                </div>
+                <div style="width:20%" class="w3-cell w3-padding w3-mobile">
+                    <input class="w3-input w3-border" type="text" placeholder="Keyword search" id="keySearch"
+                        onkeyup="showHint(this.value)">
+                        <div id='hintDiv' class="w3-white"></div>
+                </div>
+                
+                <div style="width:100px" class="w3-cell w3-padding w3-mobile">
+                    <input class="w3-button w3-white" type="button" value="Search" onclick="myFunction()">
+                </div>
+            </div>
+            <!--</div>-->
+        </div>
+    </div>
+
+
+    <p><a href="#" class="w3-margin-left">Home</a> | Search Result</p>
+
+
+
+
+    <div id="contents" style="margin: auto;">
+        <div class="w3-container w3-third" style="width: 800px;">
+            <div class="w3-container w3-green w3-padding-16 w3-large">
+                Jobs In Kenya
+            </div>
+            <div class="w3-container w3-border">
+                <p class="w3-section w3-large"><b id="totals"></b> Jobs Found</p>
+            </div>
+            <div id="searched"></div>
+            <div class="w3-container w3-border w3-margin-top w3-green w3-large w3-padding-16">
+                Featured Jobs
+            </div>
+            <div id="applications"></div>
+        </div>
+        <div class="w3-container w3-third column w3-right w3-hide-small" id="search" style="min-width: 400px;">
+            <div class="w3-container w3-green w3-padding-16 w3-large">
+                Filter results
+            </div>
+            <div class="w3-container w3-border">
+                <input class="w3-input w3-border w3-section" type="text" placeholder="Keyword Search" id="keySearch2"
+                    onkeyup="showHint(this.value)">
+            </div>
+            <div class="w3-container w3-border">
+                <select class="w3-select w3-section" name="searchJobFunction" id="searchJobFunction">
+                    <option value="" disabled selected>Job Function</option>
+                    <option value="Consulting & Strategy">Consulting & Strategy</option>
+                    <option value="Sales">Sales</option>
+                    <option value="Control and Assurance">Control & Assurance</option>
+                    <option value="Social Services">Social Services</option>
+                    <option value="Marketing and Communication">Marketing & Communication</option>
+                    <option value="Management Business Development">Management Business Development</option>
+                    <option value="Driver and Transport Services">Driver & Transport Services</option>
+                    <option value="Customer Service and Support">Customer Service & Support</option>
+                    <option value="Software and Data">Software & Data</option>
+                    <option value="Engineering and Technology">Engineering & Technology</option>
+                    <option value="Medical and Pharmaceuticals">Medical & Pharmaceutical</option>
+                </select>
+            </div>
+            <div class="w3-container w3-border">
+                <select class="w3-select w3-section" name="searchIndustry" id="searchIndustry">
+                    <option value="" disabled selected>Industry</option>
+                    <option value="Manufacturing">Manufacturing</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Farming">Farming</option>
+                    <option value="Publishing">Publishing</option>
+                    <option value="Management">Management</option>
+                </select>
+            </div>
+            <div class="w3-container w3-border">
+                <select class="w3-select w3-section" name="searchLocation" id="searchLocation">
+                    <option value="" disabled selected>Location</option>
+                    <option value="Nairobi">Nairobi</option>
+                    <option value="Kisumu">Kisumu</option>
+                    <option value="Kisii">Kisii</option>
+                    <option value="Kitale">Kitale</option>
+                    <option value="Mombasa">Mombasa</option>
+                    <option value="Nakuru">Nakuru</option>
+                    <option value="Bungoma">Bungoma</option>
+                    <option value="Kiambu">Kiambu</option>
+                    <option value="Nyeri">Nyeri</option>
+                    <option value="Narok">Narok</option>
+                    <option value="Nyamira">Nyamira</option>
+                    <option value="Nandi">Nandi</option>
+                </select>
+            </div>
+            <div class="w3-container w3-border">
+                <input type="button" value="SEARCH" class="w3-button w3-green w3-margin" style="width: 320px;"
+                    onclick="myFunction()">
+            </div>
+
+        </div>
+
+
+        <script type="text/javascript">
+            function w3_open() {
+                document.getElementById("mySidebar").style.display = "block";
+            }
+            function w3_close() {
+                document.getElementById("mySidebar").style.display = "none";
+            }
+        </script>
+
+</body>
+
+</html>

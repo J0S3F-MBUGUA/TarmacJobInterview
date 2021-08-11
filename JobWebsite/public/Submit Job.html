@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+
+<head>
+    <title>Submit Job</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        input[type=text],
+        input[type=password],
+        input[type=email],
+        input[type=number] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: none;
+            border-bottom: 2px solid black;
+        }
+
+        #header {
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+        form {
+            padding: 20px
+        }
+    </style>
+    <link href="w3.css" type="text/css" rel="stylesheet">
+    <script src="jquery-3.5.1.js"></script>
+    <script>
+        function callMe() {
+            var phoneNo = document.getElementById('phone').value
+            if (phoneNo.length != 10 && phoneNo.match(/\b07/g) != null) {
+                alert('Phone number is either too short or not starting with 07...')
+                return false
+            } else {
+            }
+            if (localStorage.getItem("thisJob")) {
+                document.getElementById("hideMe").value = localStorage.getItem("thisJob");
+                localStorage.removeItem("thisJob");
+
+            } else {
+                alert("!!! Please choose a job first")
+                return;
+            }
+
+        }
+    </script>
+
+</head>
+
+<body>
+    <header id="header">
+        <h1 class="w3-center w3-xxlarge"><b class="w3-text-green">Tarmac Job Interview</b></h1>
+    </header>
+    <div style="margin: auto; width: 800px" class="w3-card w3-padding-16 formContainer">
+        <form id="myform" action="/employer/SubmitJobs" enctype="multipart/form-data" method="POST"
+            onsubmit="return callMe()">
+            <h2>Please Fill The Form Below</h2>
+            <input type="hidden" name='selectedJob' id='hideMe'>
+            <input type="text" name="fname" placeholder="First Name" required>
+            <input type="text" name="lname" placeholder="Last Name" required class="w3-margin-top">
+            <input type="email" name="email" placeholder="Email Address" required class='w3-margin-top'>
+            <input type="number" name="phoneNo" placeholder="Phone Number" required class="w3-margin-top" id="phone">
+            <label class="w3-margin-top"><b>Gender</b></label><br>
+            <p>
+                <input class="w3-radio" type="radio" name="gender" value="male" checked>
+                <label><b>Male</b></label>
+            </p>
+            <p>
+                <input class="w3-radio" type="radio" name="gender" value="female">
+                <label><b>Female</b></label>
+            </p>
+
+            <label><b>Marital Status</b></label>
+            <select class="w3-select w3-section" name="maritalStatus">
+                <option value="" disabled selected>Marital Status</option>
+                <option value="married">Married</option>
+                <option value="single">Single</option>
+                <option value="divorced">Divorced</option>
+            </select>
+            <label><b>Postal Address</b></label><br>
+            <input type="text" name="pAddress" placeholder="Postal Address" required class="w3-margin-top">
+            <label><b>Upload all documents required </b></label><br>
+            <input type="file" name="cv" multiple><br>
+            <div class="w3-grey w3-padding w3-margin-top">
+                <b>NB:</b> This website is capable of applying automatically for you if a similar job is created by
+                another employer/organization.
+                You can choose to just submit this job or notify you if a similar job occurs via the submitted email or
+                notify and apply if similar job occurs.<br>
+                <label class="w3-margin-top"><b>Submission criteria</b></label><br>
+                <div>
+                    <input class="w3-radio" type="radio" name="subscribe" value="no" checked>
+                    <label><b>Just submit this application</b></label>
+                </div>
+                <div>
+                    <input class="w3-radio" type="radio" name="subscribe" value="notify">
+                    <label><b>Just notify if similar application is posted</b></label>
+                </div>
+                <div>
+                    <input class="w3-radio" type="radio" name="subscribe" value="apply">
+                    <label><b>Apply as well as notify for similar application</b></label>
+                </div>
+                <hr>
+                If you choose <b>Apply as well as notify for similar application</b> you can select a suitable criteria that you feel are important
+                to you and should match with the job you are about to apply.<br>
+                <input class="w3-check" type="checkbox" name="Location" value="location">
+                <label>Location</label>
+
+                <input class="w3-check" type="checkbox" name="JobType" value="jobType">
+                <label>Job Type(full/part time)</label>
+
+                <input class="w3-check" type="checkbox" name="Salary" value="salary">
+                <label>Amount Paying</label>
+
+                <input class="w3-check" type="checkbox" name="Industry" value="industry">
+                <label>Industry Type</label>
+            </div>
+            <input type="submit" name="submit" value="Submit" class="w3-button w3-green w3-margin-top">
+            <div class="w3-margin w3-right"><a href="index.html" class="w3-margin">Home</a><a href="LoginPage.html"
+                    class="w3-margin">Back</a></div>
+        </form>
+    </div>
+</body>
+
+</html>

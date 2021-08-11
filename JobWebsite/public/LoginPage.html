@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+
+<head>
+    <title>Tarmac Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="w3.css" type="text/css" rel="stylesheet">
+    <style>
+        input[type=text] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: none;
+            border-bottom: 2px solid black;
+        }
+
+        #myform {
+
+            padding-bottom: 50px;
+        }
+
+        #header {
+            margin-top: 50px;
+            margin-bottom: 50px
+        }
+
+        h2,
+        p {
+            padding: 20px;
+        }
+
+        #later {
+            padding-top: 30px;
+            padding-left: 15px;
+            padding-right: 15px
+        }
+    </style>
+    <script src="jquery-3.5.1.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myform').on('submit', function (evt) {
+                evt.preventDefault();
+                var action = $(this).attr('action');
+                $.ajax({
+                    url: action,
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        if (data == "unexistance") {
+                            alert("!!! User does not exist");
+                        } else if (data =="incorrect") {
+                            alert("!!! Incorrect login");
+                        } else if(data=='logged in'){
+                            window.location.href='/CreateJobs'
+                        }
+                    },
+                    error: function () {
+                        alert('There was a problem!!!.');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <header id="header">
+        <h1 class="w3-center w3-margin w3-xxlarge w3-text-green"><b>Tarmac Job Interview</b></h1>
+    </header>
+
+    <div style="margin: auto; width: 500px" class="w3-card">
+        <form id="myform" action="/employer/login" method="POST">
+            <h2>Login</h2>
+            <div class="w3-center">Use other social media accounts to login</div>
+            <div class="w3-row w3-center">
+                <a href="#"><img src="facebook-new.png" alt="facebook icon"
+                        style="width:50px;height:50px; margin:5px 30px"></a>
+                <a href="#"><img src="gmail-login.png" alt="gmail icon"
+                        style="width:50px;height:50px; margin:5px 30px"></a>
+            </div>
+            <div>
+                <p class="w3-center">Or Continue with</p>
+            </div>
+            <input class="w3-input" type="email" name="email" placeholder="Email Address" required>
+            <input class="w3-input" type="password" name="password" placeholder="Password" required>
+            <input type="submit" id="submission" value="Submit" class="w3-button w3-green w3-margin">
+            <div id="later">Don't have an account? <a href="SignUp.html">Sign Up</a>
+                <a href="index.html" class="w3-right">Home</a></div>
+        </form>
+
+    </div>
+</body>
+
+</html>

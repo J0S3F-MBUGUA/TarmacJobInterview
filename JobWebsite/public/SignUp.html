@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Sign Up</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style> 
+            input[type=text], input[type=password], input[type=email],input[type=number]{
+                width: 100%;
+                padding: 12px 20px;
+                margin: 8px 0;
+                box-sizing: border-box;
+                border: none;
+                border-bottom: 2px solid black;
+            }
+            #myform{
+                padding-left: 20px;
+                padding-right: 20px;
+                padding-bottom: 50px;
+            }
+
+            #header{height: 100px;}
+            h2,p{padding: 20px;}
+            #later{padding-top: 30px;
+                   padding-left: 15px;
+                   padding-right: 15px}
+            </style>
+            <link href="w3.css" type="text/css" rel="stylesheet">
+            <script src="jquery-3.5.1.js"></script>
+            <script>
+                $(document).ready(function () {
+                    $('#myform').on('submit', function (evt) {
+                        evt.preventDefault();
+                        var action = $(this).attr('action');
+                        var $container = $(this).closest('.formContainer');
+                        $.ajax({
+                            url: action,
+                            type: 'POST',
+                            data:$(this).serialize(),
+                            success: function (data) {
+                                if (data=="account created") {
+                                    window.location.href='/afterSignUp';
+                                } else if(data=="exists"){
+                                    alert('!!!User already Exists');
+                                }else {
+                                    $container.html('There was a problem.');
+                                }
+                            },
+                            error: function () {
+                                $container.html('There was a problem!!!.');
+                            }
+                        });
+                    });
+                });
+            </script>
+           
+        </head>
+        <body>
+        <header id="header" class="w3-white">
+            <h1 class="w3-center w3-xxlarge w3-text-green"><b>Tarmac Job Interview</b></h1>
+        </header>
+
+        <div class="w3-card w3-padding-16 w3-white formContainer" style="margin: auto; width: 800px">
+            <form id="myform" action="/employer/SignUp" method="POST">
+                <h2>Sign Up</h2>
+                <input type="text" name="orgName" placeholder="Organisation Name" required > 
+                <input type="text" name="username" placeholder="Username" required class="w3-margin-top">
+                <input type="password"  name="password" placeholder="Create Password" required class=" w3-margin-top">
+                <input type="password" placeholder="Confirm Password" required class=" w3-margin-top">
+                <input type="number" name="phoneNo" placeholder="Phone Number" required class="w3-margin-top">
+                <input type="email" name="email" placeholder="Email Address" required class="w3-margin-top">
+                <input type="text" name="website" placeholder="Companie's Website" class="w3-margin-top">
+                <input type="text" name="address" placeholder="Postal Address" required class="w3-margin-top">
+                <input type="submit" id="submission" value="Submit" class="w3-button w3-green w3-margin-top">
+                <div class="w3-margin w3-right"><a href="index.html" class="w3-margin">Home</a><a href="LoginPage.html" class="w3-margin">Back</a></div>
+            </form>
+            <button id="none"></button>
+        </div>
+
+    </body>
+</html>
